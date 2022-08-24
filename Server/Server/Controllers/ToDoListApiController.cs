@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server.Models;
 using Server.Models.ViewModels;
+using System.Globalization;
 
 namespace Server.Controllers
 {
@@ -26,7 +27,7 @@ namespace Server.Controllers
             {
                 Id = t.Id,
                 Subjects = t.Subjects,
-                ExpiryDate = t.ExpiryDate,
+                ExpiryDate = t.ExpiryDate.ToString(),
                 Describe = t.Describe,
                 TimeLeft = t.TimeLeft,
             }).ToList();
@@ -41,7 +42,7 @@ namespace Server.Controllers
             Todolist newTodolist = new Todolist();
             newTodolist.Subjects = todolistViewModel.Subjects;
             newTodolist.Describe = todolistViewModel.Describe;
-            newTodolist.ExpiryDate = todolistViewModel.ExpiryDate;
+            newTodolist.ExpiryDate = Convert.ToDateTime(todolistViewModel.ExpiryDate);
             _dbContext.Add(newTodolist);
 
             Message message = new Message();
@@ -73,7 +74,7 @@ namespace Server.Controllers
             var query = _dbContext.Todolists.First(t => t.Id == todolistViewModel.Id);
             query.Subjects = todolistViewModel.Subjects;
             query.Describe = todolistViewModel.Describe;
-            query.ExpiryDate = todolistViewModel.ExpiryDate;
+            query.ExpiryDate = Convert.ToDateTime(todolistViewModel.ExpiryDate);
 
             Message message = new Message();
             try
@@ -97,7 +98,7 @@ namespace Server.Controllers
         }
         // 刪除代辦事項
         [HttpDelete]
-        [Route("deleteItem/rawdata")]
+        [Route("deleteItem/rawdata/{id}")]
         public Message DeleteTodoitem(int id)
         {
             var query = _dbContext.Todolists.First(t => t.Id == id);
