@@ -19,7 +19,7 @@
                 </div>
                 <hr class="mb-0">
                 <div class="col col-12 d-flex my-3 justify-content-center">
-                    <button class="btn btn-primary" type="submit" v-on:click="createItem">確認上傳</button>
+                    <button class="btn btn-primary" type="submit" v-on:click="createItem">新增</button>
                 </div>
             </div>
         </div>
@@ -43,7 +43,7 @@
                 <td>{{item.expiryDate.split("12")[0]}}</td>
                 <td>{{item.timeLeft}}</td>
                 <td>
-                    <button class="btn btn-warning">修改</button>
+                    <a class="btn btn-warning" v-bind:href="`/UpdateView/UpdateView?id=${item.id}`">修改</a>
                 </td>
                 <td>
                     <button class="btn btn-danger" v-bind:value="item.id" v-on:click="deleteItem">完成</button>

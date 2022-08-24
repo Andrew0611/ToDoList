@@ -1,0 +1,85 @@
+﻿<h3>修改代辦事項</h3>
+<div id="updateForm" class="row mt-4 justify-content-center">
+    <form id="updateContent">
+        <div class="col col-12">
+            <div class="row g-3 bg-light rounded mb-3">
+                <div class="col col-6 was-validated">
+                    <label for="Subjects" class="form-label">代辦主旨: </label>
+                    <input type="text" v-model="updateItem.subjects" class="form-control" id="Subjects" name="Subjects" required>
+                </div>
+                <div class="col col-6">
+                    <label for="" class="form-label">選擇日期: </label>
+                    <input type="date" v-on:change="changeDate" class="form-control">
+                </div>
+                <div class="col col-6">
+                    <label for="ExpiryDate" class="form-label">到期日: </label>
+                    <input type="text" v-bind:value="itemDate" class="form-control" id="ExpiryDate" name="ExpiryDate" required readonly>
+                </div>
+                <div class="col col-12 was-validated">
+                    <label for="Describe" class="form-label">詳細代辦資訊: </label>
+                    <input v-model="updateItem.describe" class="form-control" id="Describe" name="Describe" required />
+                </div>
+                <hr class="mb-0">
+                <div class="col col-6 d-flex my-3 justify-content-end">
+                    <button class="btn btn-success" type="submit" v-on:click="doUpdateItem">儲存</button>
+                </div>
+                <div class="col col-6 d-flex my-3 justify-content-start">
+                    <a href="https://localhost:7109/Todolist/Todolist" class="btn btn-danger">取消</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts{
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.8/dist/vue.js"></script>
+    <script>
+        var vm = new Vue({
+            data: {
+                updateItem: [],
+                itemDate: ""
+            },
+            mounted: function(){
+                this.getUpdateData();
+            },
+            methods: {
+                getUpdateData: function(){
+                    fetch('https://localhost:5001/api/ToDoListApi/updateItemData/rawdata/' + location.search.replace("?id=", ""), {
+                        method: 'GET'
+                    })
+                    .then(function(resp){
+                        console.log(resp)
+                        return resp.json();
+                    })
+                    .then(function(result){
+                        console.log(result)
+                        vm.updateItem = result;
+                        vm.itemDate = vm.updateItem.expiryDate.split(" ")[0].replaceAll("/", "-");
+                    })
+                },
+                changeDate: function(e){
+                    vm.itemDate = e.target.value;
+                },
+                doUpdateItem: function () {
+                    var curItem = {
+                        Id: this.updateItem.id,
+                        Subjects: this.updateItem.subjects,
+                        ExpiryDate: this.itemDate,
+                        Describe: this.updateItem.describe
+                    }
+                    console.log(curItem)
+                    fetch("https://localhost:5001/api/ToDoListApi/updateItem/rawdata", {
+                        method: 'PUT',
+                        body: JSON.stringify(curItem),
+                        headers: new Headers({
+                            'Content-type': 'application/json'
+                        })
+                    })
+                    .then(function(){
+                        window.location.href = "https://localhost:7109/Todolist/Todolist"
+                    })
+                }
+            }
+        }).$mount('#updateForm')
+    </script>
+}

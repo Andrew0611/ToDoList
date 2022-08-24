@@ -34,6 +34,20 @@ namespace Server.Controllers
             return query;
         }
 
+        // 取得欲修改代辦事項資料
+        [HttpGet]
+        [Route("updateItemData/rawdata/{id}")]
+        public TodolistViewModel GetUpdataData(int id)
+        {
+            var query = _dbContext.Todolists.First(t => t.Id == id);
+            TodolistViewModel todolistViewModel = new TodolistViewModel();
+            todolistViewModel.Id = id;
+            todolistViewModel.Subjects = query.Subjects;
+            todolistViewModel.ExpiryDate = query.ExpiryDate.ToString();
+            todolistViewModel.Describe = query.Describe;
+            return todolistViewModel;
+        }
+
         // 新增代辦事項
         [HttpPost]
         [Route("createOne/rawdata")]
