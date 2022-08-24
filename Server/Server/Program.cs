@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Server;
+using Server.Interface;
 using Server.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +13,7 @@ builder.Services.AddDbContext<MemorandumContext>(opt =>
 {
     opt.UseSqlServer(builder.Configuration.GetConnectionString("Memorandum"));
 });
+builder.Services.AddScoped<IMemorandum, MemorandumServices>();
 
 // CORS¬Fµ¦
 string[] corsURL = manager.GetSection("CORS").Get<string[]>();
